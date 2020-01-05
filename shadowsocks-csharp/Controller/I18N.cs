@@ -7,10 +7,12 @@ using System.IO;
 using System.Text;
 using System.Windows.Forms;
 
-namespace Shadowsocks.Controller
+using Shadowsocks.Std.Util
+
+namespace Shadowsocks.Std.Util
 {
 
-    public static class I18N
+    public static class I18N : AbstractI18N
     {
         public const string I18N_FILE = "i18n.csv";
 

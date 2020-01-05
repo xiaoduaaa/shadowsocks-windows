@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <RootNamespace>Shadowsocks.DotnetCore.WF</RootNamespace>
+    <UseWindowsForms>true</UseWindowsForms>
+    <AssemblyName>Shadowsocks</AssemblyName>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DebugType>embedded</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="shadowsocks.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="shadowsocks.ico" />
+  </ItemGroup>
+
+</Project>
