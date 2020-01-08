@@ -4,7 +4,7 @@ using System.IO;
 using Newtonsoft.Json;
 using Shadowsocks.Controller;
 
-namespace Shadowsocks.Model
+namespace Shadowsocks.Std.Model
 {
     [Serializable]
     public class Configuration

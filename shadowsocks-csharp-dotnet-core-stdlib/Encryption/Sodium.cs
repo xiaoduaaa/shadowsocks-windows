@@ -1,14 +1,15 @@
-﻿using System;
+﻿using NLog;
+using Shadowsocks.Std.Util;
+using System;
 using System.IO;
 using System.Runtime.InteropServices;
-using Shadowsocks.Controller;
-using Shadowsocks.Properties;
-using Shadowsocks.Util;
 
 namespace Shadowsocks.Std.Encryption
 {
     public static class Sodium
     {
+        private static readonly Logger _logger = LogManager.GetCurrentClassLogger();
+
         private const string DLLNAME = "libsscrypto.dll";
 
         private static bool _initialized = false;
@@ -28,7 +29,7 @@ namespace Shadowsocks.Std.Encryption
             }
             catch (System.Exception e)
             {
-                Logging.LogUsefulException(e);
+                Utils.LogUsefulException(e);
             }
             LoadLibrary(dllPath);
 
@@ -46,7 +47,7 @@ namespace Shadowsocks.Std.Encryption
                     }
 
                     AES256GCMAvailable = crypto_aead_aes256gcm_is_available() == 1;
-                    Logging.Debug($"sodium: AES256GCMAvailable is {AES256GCMAvailable}");
+                    _logger.Debug($"sodium: AES256GCMAvailable is {AES256GCMAvailable}");
                 }
             }
         }

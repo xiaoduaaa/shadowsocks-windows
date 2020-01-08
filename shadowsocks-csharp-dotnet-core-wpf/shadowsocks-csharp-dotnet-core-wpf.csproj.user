@@ -3,14 +3,6 @@
   <PropertyGroup>
     <_LastSelectedProfileId>D:\workspaces\shadowsocks-windows\shadowsocks-csharp-dotnet-core-wpf\Properties\PublishProfiles\win-arm.pubxml</_LastSelectedProfileId>
   </PropertyGroup>
-  <ItemGroup>
-    <Compile Update="MainWindow.xaml.cs">
-      <SubType>Code</SubType>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="MainWindow.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup />
 </Project>

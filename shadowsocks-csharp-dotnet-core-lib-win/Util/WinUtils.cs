@@ -1,71 +1,17 @@
-﻿using System;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.IO;
-using System.Net.Sockets;
-using System.Runtime.ExceptionServices;
-using System.Runtime.InteropServices;
-
-using Microsoft.Win32;
-
+﻿using Microsoft.Win32;
 using NLog;
-
-using Shadowsocks.Model;
-using Shadowsocks.Std.SystemProxy;
+using System;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
 
 namespace Shadowsocks.Std.Win.Util
 {
 
     public enum WindowsThemeMode { Dark, Light }
 
-    public interface IGetApplicationInfo
-    {
-        public string ExecutablePath();
-    }
-
-    public static class WinUtil
+    public static class WinUtils
     {
         private static readonly Logger _logger = LogManager.GetCurrentClassLogger();
-
-        private static string _tempPath = null;
-
-        #region Get Temp Path
-
-        // return path to store temporary files
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "<挂起>")]
-        public static string GetTempPath(IGetApplicationInfo applicationInfo)
-        {
-            if (_tempPath == null)
-            {
-                bool isPortableMode = Configuration.Load().portableMode;
-                try
-                {
-                    if (isPortableMode)
-                    {
-                        _tempPath = Directory.CreateDirectory("ss_win_temp").FullName;
-                        // don't use "/", it will fail when we call explorer /select xxx/ss_win_temp\xxx.log
-                    }
-                    else
-                    {
-                        _tempPath = Directory.CreateDirectory(Path.Combine(Path.GetTempPath(), $"Shadowsocks\\ss_win_temp_{applicationInfo.ExecutablePath().GetHashCode()}")).FullName;
-                    }
-                }
-                catch (Exception e)
-                {
-                    _logger.Error(e);
-
-                    ExceptionDispatchInfo.Capture(e.InnerException).Throw();
-                }
-            }
-
-            return _tempPath;
-        }
-
-        // return a full path with filename combined which pointed to the temporary directory
-        public static string GetTempPath(string filename, IGetApplicationInfo applicationInfo) => Path.Combine(GetTempPath(applicationInfo), filename);
-
-        #endregion
-
 
         #region Windows Theme
 
@@ -141,74 +87,6 @@ namespace Shadowsocks.Std.Win.Util
                 SetProcessWorkingSetSize(Process.GetCurrentProcess().Handle,
                                          (UIntPtr)0xFFFFFFFF,
                                          (UIntPtr)0xFFFFFFFF);
-            }
-        }
-
-        #endregion
-
-
-        #region Log
-
-        public static void LogUsefulException(Exception e)
-        {
-            // just log useful exceptions, not all of them
-            if (e is SocketException se)
-            {
-                if (se.SocketErrorCode == SocketError.ConnectionAborted)
-                {
-                    // closed by browser when sending
-                    // normally happens when download is canceled or a tab is closed before page is loaded
-                }
-                else if (se.SocketErrorCode == SocketError.ConnectionReset)
-                {
-                    // received rst
-                }
-                else if (se.SocketErrorCode == SocketError.NotConnected)
-                {
-                    // The application tried to send or receive data, and the System.Net.Sockets.Socket is not connected.
-                }
-                else if (se.SocketErrorCode == SocketError.HostUnreachable)
-                {
-                    // There is no network route to the specified host.
-                }
-                else if (se.SocketErrorCode == SocketError.TimedOut)
-                {
-                    // The connection attempt timed out, or the connected host has failed to respond.
-                }
-                else
-                {
-                    _logger.Info(e);
-                }
-            }
-            else if (e is ObjectDisposedException)
-            {
-            }
-            else if (e is Win32Exception winex)
-            {
-                // Win32Exception (0x80004005): A 32 bit processes cannot access modules of a 64 bit process.
-                if ((uint)winex.ErrorCode != 0x80004005)
-                {
-                    _logger.Info(e);
-                }
-            }
-            else if (e is ProxyException pe)
-            {
-                switch (pe.Type)
-                {
-                    case ProxyExceptionType.FailToRun:
-                    case ProxyExceptionType.QueryReturnMalformed:
-                    case ProxyExceptionType.SysproxyExitError:
-                        _logger.Error($"sysproxy - {pe.Type.ToString()}:{pe.Message}");
-                        break;
-                    case ProxyExceptionType.QueryReturnEmpty:
-                    case ProxyExceptionType.Unspecific:
-                        _logger.Error($"sysproxy - {pe.Type.ToString()}");
-                        break;
-                }
-            }
-            else
-            {
-                _logger.Info(e);
             }
         }
 

@@ -11,7 +11,7 @@ using Newtonsoft.Json;
 using Shadowsocks.Std.Model;
 using Shadowsocks.Std.SystemProxy;
 
-namespace Shadowsocks.Std.Win.Util.SystemProxy
+namespace Shadowsocks.Std.Util.SystemProxy
 {
     public static class Sysproxy
     {
@@ -71,7 +71,7 @@ namespace Shadowsocks.Std.Win.Util.SystemProxy
             }
             catch (IOException e)
             {
-                WinUtil.LogUsefulException(e);
+                Utils.LogUsefulException(e);
             }
         }
 
